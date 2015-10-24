@@ -54,7 +54,7 @@ namespace Connection {
 
     // todo: change info from request
     std::string request("GET / HTTP/1.1\nHOST:");
-    request += m_url + "\n\n";
+    request += m_url + "\nConnection: close\n\n";
 
     // make request
     ssize_t nwrite = write(m_socketFd, request.c_str(), request.size());
@@ -76,7 +76,7 @@ namespace Connection {
     size_t nleft = BUF_SIZE - 1;
     while(nleft > 0) {
       if ((nread = read(m_socketFd, p, nleft) < 0)) {
-	if (errno == EINTR)//The call was interrupted by a signal before any data was read(R.)
+	if (errno == EINTR)//The call was interrupted by a signal before any data was read(W. R. Stevens)
 	  nread = 0; // call read() again
 	else {
 	  perror("read from socket");

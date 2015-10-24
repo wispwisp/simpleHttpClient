@@ -4,6 +4,7 @@
 
 // todo:
 // * read complete ?
+// * split host addr and path
 // * request class
 // * NOBLOCK IO
 // * http features
