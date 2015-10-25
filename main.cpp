@@ -2,13 +2,6 @@
 
 #include "Connection.hpp"
 
-// todo:
-// * read complete ?
-// * split host addr and path
-// * request class
-// * NOBLOCK IO
-// * http features
-
 int main(int argc, char** argv)
 {
   if (argc < 2) {

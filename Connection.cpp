@@ -12,6 +12,49 @@
 #include <string>
 #include <exception>
 
+namespace Tools {
+  void writeToSocket(int sockFd, const std::string& str) {
+
+    ssize_t nwrite = write(sockFd, str.c_str(), str.size());
+    
+    if (nwrite == -1) {
+      perror("write()");
+      throw std::exception();      
+    }
+    else if (str.size() != nwrite) {
+      printf("write incomplete\n");
+      throw std::exception();
+    }
+  }
+  
+  std::string readFromSocket(int sockFd) {
+    
+    const int BUF_SIZE = 4096;
+    char buf[BUF_SIZE];
+    char *p = buf;
+
+    ssize_t nread;
+    size_t nleft = BUF_SIZE - 1;
+    while(nleft > 0) {
+      if ((nread = read(sockFd, p, nleft) < 0)) {
+	if (errno == EINTR)//The call was interrupted by a signal before any data was read(W. R. Stevens)
+	  nread = 0; // call read() again
+	else {
+	  perror("read from socket");
+	  throw std::exception();
+	}
+      } else if (nread == 0)
+	break; // EOF
+
+      nleft -= nread;
+      p += nread;
+    }
+
+    buf[BUF_SIZE] = 0;
+    return { buf };
+  }
+}
+
 namespace Connection {
   Http::Http(const std::string& url)
     : m_url(url)
@@ -54,50 +97,9 @@ namespace Connection {
 
     // todo: change info from request
     std::string request("GET / HTTP/1.1\nHOST:");
-    request += m_url + "\nConnection: close\n\n";
+    request += m_url + "\n\n";
 
-    // make request
-    ssize_t nwrite = write(m_socketFd, request.c_str(), request.size());
-    if (nwrite == -1) {
-      perror("write()");
-      throw std::exception();      
-    }
-    else if (request.size() != nwrite) {
-      printf("write incomplete\n");
-      throw std::exception();
-    }
-
-    // get responce
-#ifdef MY_DONE
-    const int BUF_SIZE = 4096;
-    char buf[BUF_SIZE];
-    char *p = buf;
-    ssize_t nread;
-    size_t nleft = BUF_SIZE - 1;
-    while(nleft > 0) {
-      if ((nread = read(m_socketFd, p, nleft) < 0)) {
-	if (errno == EINTR)//The call was interrupted by a signal before any data was read(W. R. Stevens)
-	  nread = 0; // call read() again
-	else {
-	  perror("read from socket");
-	  throw std::exception();
-	}
-      } else if (nread == 0)
-	break; // EOF
-
-      nleft -= nread;
-      p += nread;
-    }
-
-    buf[BUF_SIZE] = 0;
-    return { buf };
-#else
-    const int BUF_SIZE = 4096;
-    char buf[BUF_SIZE];
-    buf[BUF_SIZE] = 0;
-    
-    read(m_socketFd, buf, BUF_SIZE - 1);
-    return { buf };
-#endif
+    Tools::writeToSocket(m_socketFd, request);
+    return Tools::readFromSocket(m_socketFd);
   }
 }
