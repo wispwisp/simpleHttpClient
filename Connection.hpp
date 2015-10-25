@@ -2,14 +2,13 @@
 #define CONNECTION_H
 
 #include <string>
-using std::string;
 
 namespace Connection {
 
   class Request {//TODO
-    string m_requestStr;
+    std::string m_requestStr;
   public:
-    const string& get() const { return m_requestStr; }
+    const std::string& get() const { return m_requestStr; }
   };
 
   class Http

@@ -96,8 +96,7 @@ namespace Connection {
   std::string Http::getRecivedData(const Request&) const {
 
     // todo: change info from request
-    std::string request("GET / HTTP/1.1\nHOST:");
-    request += m_url + "\n\n";
+    std::string request("GET / HTTP/1.1\nHOST:" + m_url + "\n\n");
 
     Tools::writeToSocket(m_socketFd, request);
     return Tools::readFromSocket(m_socketFd);
