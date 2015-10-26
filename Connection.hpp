@@ -2,8 +2,20 @@
 #define CONNECTION_H
 
 #include <string>
+#include <cstring>
+#include <exception>
+
 
 namespace Connection {
+
+  struct Exception : std::exception {
+    std::string m_errMsg;
+    Exception(std::string errMsg, int errnum)
+      : m_errMsg(errMsg + ": " + strerror(errnum)) {};
+    const char* what() const noexcept {
+      return m_errMsg.c_str();
+    }
+  };
 
   class Request {//TODO
     std::string m_requestStr;
