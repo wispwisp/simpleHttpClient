@@ -17,11 +17,27 @@ namespace Connection {
     }
   };
 
-  class Request {//TODO
-    std::string m_requestStr;
+
+  class Request {
+    std::string m_resource;
   public:
-    const std::string& get() const { return m_requestStr; }
+    Request(const std::string& resource)
+      : m_resource(resource) {};
+    const std::string& get() const { return m_resource; }
   };
+  // make virtual ?
+
+
+  class Responce {
+    std::string m_responceStr;
+  public:
+    Responce(const std::string& responce)
+      : m_responceStr(responce) {};
+    Responce(std::string&& responce)
+      : m_responceStr(std::move(responce)) {};
+    const std::string& getResponceStr() const { return m_responceStr; }
+  };
+
 
   class Http
   {
@@ -38,6 +54,7 @@ namespace Connection {
 
     std::string getRecivedData(const Request&) const;
   };
+
 }
 
 #endif // CONNECTION_H
