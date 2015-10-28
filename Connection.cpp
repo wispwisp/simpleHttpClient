@@ -52,8 +52,8 @@ namespace Tools {
 }
 
 namespace Connection {
-  Http::Http(const std::string& url)
-    : m_url(url)
+  Http::Http(const std::string& host)
+    : m_host(host)
   {
     // socket fd
     m_socketFd = socket(AF_INET, SOCK_STREAM, 0);
@@ -62,7 +62,7 @@ namespace Connection {
     }
 
     // host init
-    struct hostent* server = gethostbyname(m_url.c_str());
+    struct hostent* server = gethostbyname(m_host.c_str());
     if (server == NULL) {
       throw Exception("Host not found", EFAULT);
     }
@@ -85,14 +85,14 @@ namespace Connection {
       close(m_socketFd);
   }
 
-  std::string Http::getRecivedData(const Request&) const {
+  std::string Http::getResponce(const Request&) const {
 
     // todo: change info from request
     std::string resource = "/";
     std::string request("GET " +
 			resource +
 			" HTTP/1.1\nHOST:" +
-			m_url +
+			m_host +
 			"\n\n");
 
     Tools::writeToSocket(m_socketFd, request);

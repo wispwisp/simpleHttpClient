@@ -41,18 +41,18 @@ namespace Connection {
 
   class Http
   {
-    std::string m_url;
+    std::string m_host;
     int m_socketFd = -1;
     int m_port = 80;
   public:
-    Http(const std::string& url);
+    Http(const std::string& host);
     ~Http();
     Http(const Http&) = delete;
     Http& operator= (const Http&) = delete;
     Http(Http&&) = default;
     Http& operator= (Http&&) = default;
 
-    std::string getRecivedData(const Request&) const;
+    std::string getResponce(const Request&) const;
   };
 
 }

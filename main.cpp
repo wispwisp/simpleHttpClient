@@ -4,21 +4,27 @@
 
 
 #include <regex>
-#include <tuple>
 #include <string>
-std::tuple<std::string, std::string>
-parseUrl(const std::string& url) {
 
-  std::regex re{ R"(^(?:http:/+)?([^/]+)(/.*)?$)" };
-  std::smatch match;
+class ParsedUrl {
+  std::string m_host;
+  std::string m_res;
+public:
+  ParsedUrl(const std::string& url) {
 
-  if (!std::regex_match(url, match, re)) {
-    throw std::exception();
+    std::regex re{ R"(^(?:http:/+)?([^/]+)(/.*)?$)" };
+    std::smatch match;
+
+    if (!std::regex_match(url, match, re)) {
+      throw std::exception();
+    }
+
+    m_host = match[1];
+    m_res = match[2].str().empty() ? "/" : match[2].str();
   }
-
-  //host, path
-  return std::make_tuple(match[1], match[2]);
-}
+  const std::string& host() const { return m_host; }
+  const std::string& resource() const { return m_res; }
+};
 
 
 int main(int argc, char** argv)
@@ -28,16 +34,17 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  auto hostAndPath = parseUrl(argv[1]);
+  ParsedUrl parsedUrl(argv[1]);
 
-  //debug:
-  std::cout << std::get<0>(hostAndPath) << std::endl;
-  std::cout << std::get<1>(hostAndPath) << std::endl;
+#ifdef MY_DEBUG_PARSE_URL
+  std::cout << parsedUrl.host() << std::endl;
+  std::cout << parsedUrl.resource() << std::endl;
+#endif
 
-  Connection::Http con(std::get<0>(hostAndPath));
-  Connection::Request req(std::get<1>(hostAndPath));
+  Connection::Http con(parsedUrl.host());
+  Connection::Request req(parsedUrl.resource());
 
-  auto recived = con.getRecivedData(req);
+  auto recived = con.getResponce(req);
   std::cout << recived << std::endl;
 
   return 0;
