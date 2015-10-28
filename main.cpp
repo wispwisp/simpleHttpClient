@@ -9,8 +9,7 @@
 std::tuple<std::string, std::string>
 parseUrl(const std::string& url) {
 
-  // todo: correct regex. now only "aaa.com/bbb"
-  std::regex re{ R"((?:http://|)([^/]+)(/.+))" };
+  std::regex re{ R"(^(?:http:/+)?([^/]+)(/.*)?$)" };
   std::smatch match;
 
   if (!std::regex_match(url, match, re)) {
