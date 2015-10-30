@@ -1,31 +1,8 @@
 #include <iostream>
 
 #include "Connection.hpp"
-
-
-#include <regex>
-#include <string>
-
-class ParsedUrl {
-  std::string m_host;
-  std::string m_res;
-public:
-  ParsedUrl(const std::string& url) {
-
-    std::regex re{ R"(^(?:http:/+)?([^/]+)(/.*)?$)" };
-    std::smatch match;
-
-    if (!std::regex_match(url, match, re)) {
-      throw std::exception();
-    }
-
-    m_host = match[1];
-    m_res = match[2].str().empty() ? "/" : match[2].str();
-  }
-  const std::string& host() const { return m_host; }
-  const std::string& resource() const { return m_res; }
-};
-
+#include "Request.hpp"
+#include "Url.hpp"
 
 int main(int argc, char** argv)
 {
@@ -34,7 +11,7 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  ParsedUrl parsedUrl(argv[1]);
+  Url parsedUrl(argv[1]);
 
 #ifdef MY_DEBUG_PARSE_URL
   std::cout << parsedUrl.host() << std::endl;
@@ -42,7 +19,7 @@ int main(int argc, char** argv)
 #endif
 
   Connection::Http con(parsedUrl.host());
-  Connection::Request req(parsedUrl.resource());
+  Connection::Request req(parsedUrl);
 
   auto recived = con.getResponce(req);
   std::cout << recived << std::endl;
