@@ -85,17 +85,8 @@ namespace Connection {
       close(m_socketFd);
   }
 
-  std::string Http::getResponce(const Request&) const {
-
-    // todo: change info from request
-    std::string resource = "/";
-    std::string request("GET " +
-			resource +
-			" HTTP/1.1\nHOST:" +
-			m_host +
-			"\n\n");
-
-    Tools::writeToSocket(m_socketFd, request);
+  std::string Http::getResponce(const Request& request) const {
+    Tools::writeToSocket(m_socketFd, request.requestStr());
     return Tools::readFromSocket(m_socketFd);
   }
 }
