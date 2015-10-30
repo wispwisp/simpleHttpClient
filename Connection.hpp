@@ -5,6 +5,7 @@
 #include <cstring>
 #include <exception>
 
+#include "Request.hpp"
 
 namespace Connection {
 
@@ -16,16 +17,6 @@ namespace Connection {
       return m_errMsg.c_str();
     }
   };
-
-
-  class Request {
-    std::string m_resource;
-  public:
-    Request(const std::string& resource)
-      : m_resource(resource) {};
-    const std::string& get() const { return m_resource; }
-  };
-  // make virtual ?
 
 
   class Responce {
