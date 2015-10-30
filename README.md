@@ -1,8 +1,8 @@
 # simpleHttpClient
 
 todo:
- * parse and split host addr and path
- * request class
- * NOBLOCK IO
- * http features
+ * Change polymorphism in Request from virtual to tempalate ?
+ * NOBLOCK IO (Where exactly ?)
+ * http features (Redirect, partition download, ...)
+ * Socket read/write complete ?
 
