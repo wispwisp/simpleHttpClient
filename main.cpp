@@ -18,10 +18,12 @@ int main(int argc, char** argv)
   std::cout << parsedUrl.resource() << std::endl;
 #endif
 
-  Connection::Http con(parsedUrl.host());
-  Connection::Request req(parsedUrl);
+  Connection::Http connect(parsedUrl.host());
+  auto request = Connection::Request::createRequest(
+						    Connection::Request::Type::SimpleGet,
+						    parsedUrl);
 
-  auto recived = con.getResponce(req);
+  auto recived = connect.getResponce(request);
   std::cout << recived << std::endl;
 
   return 0;
