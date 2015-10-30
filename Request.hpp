@@ -18,7 +18,7 @@ namespace Connection {
   class RequestImplSimpleGet : public RequestImplInterface {
     std::string m_request;
   public:
-    RequestImplSimpleGet(const Url& url);
+    RequestImplSimpleGet(const Url&);
     ~RequestImplSimpleGet() = default;
     const std::string& getRequestStr() const { return m_request; }
   };
