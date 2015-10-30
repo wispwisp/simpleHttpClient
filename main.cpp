@@ -16,12 +16,13 @@ int main(int argc, char** argv)
 #ifdef MY_DEBUG_PARSE_URL
   std::cout << parsedUrl.host() << std::endl;
   std::cout << parsedUrl.resource() << std::endl;
+  return 0;
 #endif
 
   Connection::Http connect(parsedUrl.host());
-  auto request = Connection::Request::createRequest(
-						    Connection::Request::Type::SimpleGet,
-						    parsedUrl);
+
+  auto simpleGet = Connection::Request::Type::SimpleGet;
+  auto request = Connection::Request::createRequest(simpleGet, parsedUrl);
 
   auto recived = connect.getResponce(request);
   std::cout << recived << std::endl;
