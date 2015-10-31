@@ -11,6 +11,8 @@
 
 #include <string>
 
+#include "Responce.hpp"
+
 namespace Tools {
   void writeToSocket(int sockFd, const std::string& str) {
 
@@ -85,8 +87,12 @@ namespace Connection {
       close(m_socketFd);
   }
 
-  std::string Http::getResponce(const Request& request) const {
+  Responce Http::getResponce(const Request& request) const {
+
     Tools::writeToSocket(m_socketFd, request.requestStr());
-    return Tools::readFromSocket(m_socketFd);
+    std::string responceStr = Tools::readFromSocket(m_socketFd);
+    Responce responce(responceStr);
+    
+    return responce;
   }
 }

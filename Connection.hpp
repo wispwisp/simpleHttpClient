@@ -5,6 +5,7 @@
 #include <cstring>
 #include <exception>
 
+#include "Responce.hpp"
 #include "Request.hpp"
 
 namespace Connection {
@@ -16,17 +17,6 @@ namespace Connection {
     const char* what() const noexcept {
       return m_errMsg.c_str();
     }
-  };
-
-
-  class Responce {
-    std::string m_responceStr;
-  public:
-    Responce(const std::string& responce)
-      : m_responceStr(responce) {};
-    Responce(std::string&& responce)
-      : m_responceStr(std::move(responce)) {};
-    const std::string& getResponceStr() const { return m_responceStr; }
   };
 
 
@@ -43,7 +33,7 @@ namespace Connection {
     Http(Http&&) = default;
     Http& operator= (Http&&) = default;
 
-    std::string getResponce(const Request&) const;
+    Responce getResponce(const Request&) const;
   };
 
 }

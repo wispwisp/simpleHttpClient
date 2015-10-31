@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Connection.hpp"
+#include "Responce.hpp"
 #include "Request.hpp"
 #include "Url.hpp"
 
@@ -17,8 +18,20 @@ int main(int argc, char** argv)
   auto request = Connection::Request::createRequest(simpleGet, parsedUrl);
 
   Connection::Http connect(parsedUrl.host());
-  auto recived = connect.getResponce(request);
-  std::cout << recived << std::endl;
+  auto responce = connect.getResponce(request);
+
+#ifdef MY_RESPONCE_DEBUG
+  std::cout << "Status line: " << responce.statusLine() << "\n"
+	    << "Status code: " << responce.statusCode() << "\n";
+
+  std::cout << "Headers:\n";
+  for (const auto& header : responce.headers()) {
+    std::cout << header.first << ": " << header.second << "\n";
+  }
+  
+  std::cout << "Body:\n" << responce.body()
+	    << std::endl;
+#endif
 
   return 0;
 }
