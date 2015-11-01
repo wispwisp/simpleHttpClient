@@ -1,15 +1,17 @@
 #include "Connection.hpp"
 
-#include <cstdio>
-#include <cstdlib>
 #include <sys/types.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #include <netdb.h>
+
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 
 #include <string>
+#include <stdexcept>
 
 #include "Responce.hpp"
 
@@ -19,10 +21,11 @@ namespace Tools {
     ssize_t nwrite = write(sockFd, str.c_str(), str.size());
 
     if (nwrite == -1) {
-      throw Connection::Exception("write()", errno);
+      throw std::runtime_error("writeToSocket(), write() failed: " +
+			       std::string(strerror(errno)));
     }
     else if (str.size() != nwrite) {
-      throw Connection::Exception("write incomplete", EAGAIN);
+      throw std::runtime_error("write incomplete");
     }
   }
   
@@ -39,7 +42,8 @@ namespace Tools {
 	if (errno == EINTR)//The call was interrupted by a signal before any data was read(W. R. Stevens)
 	  nread = 0; // call read() again
 	else {
-	  throw Connection::Exception("read()", errno);
+	  throw std::runtime_error("readFromSocket(), read() failed: " +
+				   std::string(strerror(errno)));
 	}
       } else if (nread == 0)
 	break; // EOF
@@ -60,13 +64,14 @@ namespace Connection {
     // socket fd
     m_socketFd = socket(AF_INET, SOCK_STREAM, 0);
     if (m_socketFd == -1) {
-      throw Exception("socket()", errno);
+      throw std::runtime_error("socket(): " +
+			       std::string(strerror(errno)));
     }
 
     // host init
     struct hostent* server = gethostbyname(m_host.c_str());
     if (server == NULL) {
-      throw Exception("Host not found", EFAULT);
+      throw std::runtime_error("Host not found");
     }
 
     // sockaddr:
@@ -78,7 +83,8 @@ namespace Connection {
 
     // connect
     if (connect(m_socketFd, (const struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) {
-      throw Exception("connect()", errno);
+      throw std::runtime_error("connect(): " +
+			       std::string(strerror(errno)));
     }
   }
 
