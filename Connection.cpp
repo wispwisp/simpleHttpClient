@@ -98,7 +98,14 @@ namespace Connection {
     Tools::writeToSocket(m_socketFd, request.requestStr());
     std::string responceStr = Tools::readFromSocket(m_socketFd);
     Responce responce(responceStr);
-    
+
+    /* TODO: 
+     * content-lenght: asynchronous downloading
+     * transfer-encoding chunked: download until zero-chunk
+     if (responce.isHeader"Content-Length") {}
+     else if (responce.isHeader("Transfer-Encoding")) {}
+    */
+
     return responce;
   }
 }
