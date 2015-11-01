@@ -17,15 +17,15 @@ int main(int argc, char** argv)
   auto simpleGet = Connection::Request::Type::SimpleGet;
   auto request = Connection::Request::createRequest(simpleGet, url);
 
-  Connection::Http connect(url.host());
-  auto responce = connect.getResponce(request);
+  Connection::Http connection(url.host());
+  auto responce = connection.getResponce(request);
 
   /* TODO: redirect; operator= overload; Request::Type::SimpleGetWithRedirect; getHeader;
      while (responce.status() >= 300 && responce.status() < 308) {
      url = responce.getHeader("Location");
-     connect = url.host();
+     connection = url.host();
      request = Connection::Request::createRequest(simpleGet, url);
-     responce = connect.getResponce(request);
+     responce = connection.getResponce(request);
      }
   */
 
