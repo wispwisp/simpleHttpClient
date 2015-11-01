@@ -20,7 +20,7 @@ int main(int argc, char** argv)
   Connection::Http connection(url.host());
   auto responce = connection.getResponce(request);
 
-  /* TODO: redirect; operator= overload; Request::Type::SimpleGetWithRedirect; getHeader;
+  /* TODO: redirect; operator= overload; getHeader;
      while (responce.status() >= 300 && responce.status() < 308) {
      url = responce.getHeader("Location");
      connection = url.host();
