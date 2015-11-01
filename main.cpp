@@ -12,13 +12,22 @@ int main(int argc, char** argv)
     return -1;
   }
 
-  Url parsedUrl(argv[1]);
+  Url url(argv[1]);
 
   auto simpleGet = Connection::Request::Type::SimpleGet;
-  auto request = Connection::Request::createRequest(simpleGet, parsedUrl);
+  auto request = Connection::Request::createRequest(simpleGet, url);
 
-  Connection::Http connect(parsedUrl.host());
+  Connection::Http connect(url.host());
   auto responce = connect.getResponce(request);
+
+  /* TODO: redirect; operator= overload; Request::Type::SimpleGetWithRedirect; getHeader;
+     while (responce.status() >= 300 && responce.status() < 308) {
+     url = responce.getHeader("Location");
+     connect = url.host();
+     request = Connection::Request::createRequest(simpleGet, url);
+     responce = connect.getResponce(request);
+     }
+  */
 
 #define MY_RESPONCE_DEBUG
 #ifdef MY_RESPONCE_DEBUG
@@ -29,7 +38,7 @@ int main(int argc, char** argv)
   for (const auto& header : responce.headers()) {
     std::cout << header.first << ": " << header.second << "\n";
   }
-  
+
   std::cout << "Body:\n" << responce.body()
 	    << std::endl;
 #endif
