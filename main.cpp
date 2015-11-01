@@ -20,6 +20,7 @@ int main(int argc, char** argv)
   Connection::Http connect(parsedUrl.host());
   auto responce = connect.getResponce(request);
 
+#define MY_RESPONCE_DEBUG
 #ifdef MY_RESPONCE_DEBUG
   std::cout << "Status line: " << responce.statusLine() << "\n"
 	    << "Status code: " << responce.statusCode() << "\n";
