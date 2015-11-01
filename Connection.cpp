@@ -28,7 +28,7 @@ namespace Tools {
   
   std::string readFromSocket(int sockFd) {
     
-    const int BUF_SIZE = 4096;
+    static const int BUF_SIZE = 4096;
     char buf[BUF_SIZE];
     char *p = buf;
 

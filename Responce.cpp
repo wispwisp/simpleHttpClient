@@ -43,7 +43,7 @@ namespace Connection {
     // status str:
     rangeEnd = responce.find("\r\n");
     if (rangeEnd == std::string::npos)
-      throw std::runtime_error("Bad rangeEndsponce");
+      throw std::runtime_error("Bad responce");
 
     m_statusLine = responce.substr(0, rangeEnd);
     m_statusCode = Tools::makeStatus(m_statusLine);
@@ -54,7 +54,7 @@ namespace Connection {
     do {
       rangeEnd = responce.find("\r\n", rangeBegin);
       if (rangeEnd == std::string::npos)
-	throw std::runtime_error("Bad rangeEndsponce");
+	throw std::runtime_error("Bad responce");
 
       len = rangeEnd - rangeBegin;
       if (len)

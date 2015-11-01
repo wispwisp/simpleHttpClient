@@ -5,6 +5,6 @@ todo:
  * NOBLOCK IO (Where exactly ?)
  * http features (Redirect, partition download, ...)
  * Socket read/write complete ?
- ** Chunked transfer encoding
+  ** Chunked transfer encoding
  * My exeption class redundant ?
 
