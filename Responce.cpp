@@ -68,4 +68,12 @@ namespace Connection {
     m_body = responce.substr(rangeBegin);
   }
 
+  const std::string& Responce::header(const std::string& hdr) const {
+    auto header_it = m_headers.find(hdr);
+    if (header_it == m_headers.cend())
+      throw std::runtime_error("No such header: " + hdr);
+    
+    return header_it->second;
+  }
+
 }

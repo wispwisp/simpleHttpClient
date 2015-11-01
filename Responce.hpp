@@ -18,6 +18,9 @@ namespace Connection {
     int statusCode() const {return m_statusCode; }
     const std::string& statusLine() const { return m_statusLine; }
     const std::string& body() const { return m_body; }
+
+    bool isHeader(const std::string& hdr) const { return m_headers.count(hdr); }
+    const std::string& header(const std::string&) const;
     
     const std::map<std::string, std::string>& headers() const { return m_headers; }
   };
