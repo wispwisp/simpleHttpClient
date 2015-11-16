@@ -17,8 +17,8 @@ namespace Connection {
     ~Http();
     Http(const Http&) = delete;
     Http& operator= (const Http&) = delete;
-    Http(Http&&) = default;
-    Http& operator= (Http&&) = default;
+    Http(Http&&) = delete; // todo
+    Http& operator= (Http&&) = delete; // todo
 
     Responce getResponce(const Request&) const;
   };
