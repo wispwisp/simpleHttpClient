@@ -8,7 +8,7 @@
 int main(int argc, char** argv)
 {
   if (argc < 2) {
-    std::cerr << "usage: %s [url]\n" << argv[0] << std::endl;
+    std::cerr << "usage: " << argv[0] << " [url]\n";
     return -1;
   }
 
