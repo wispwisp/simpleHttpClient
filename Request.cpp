@@ -10,13 +10,13 @@ namespace Connection
 {
   // Impl
 
-  RequestImplSimpleGet::RequestImplSimpleGet(const Url& url) {
-    m_request = "GET " +
-      url.resource() +
-      " HTTP/1.1\nHOST:" +
-      url.host() +
-      "\n\n";
-  }
+  RequestImplSimpleGet::RequestImplSimpleGet(const Url& url)
+    : m_request("GET " +
+		url.resource() +
+		" HTTP/1.1\nHOST:" +
+		url.host() +
+		"\n\n")
+  { }
 
   
   // Request
