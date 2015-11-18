@@ -1,7 +1,7 @@
 .PHONY: all clean
 
 NAME:=simpleHttpClient.out
-FLAGS:=-lstdc++ -std=c++11 -Wall -Wextra -Wshadow -pedantic -O
+FLAGS:=-lstdc++ -std=c++11 -Wall -Wextra -Wshadow -pedantic -Weffc++ -O
 
 all: $(NAME)
 
