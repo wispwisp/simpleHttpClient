@@ -13,7 +13,7 @@ namespace Connection {
     int m_socketFd = -1;
     int m_port = 80;
   public:
-    Http(const std::string& host);
+    explicit Http(const std::string& host);
     ~Http();
     Http(const Http&) = delete;
     Http& operator= (const Http&) = delete;

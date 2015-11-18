@@ -9,7 +9,7 @@ class Url {
   std::string m_host;
   std::string m_res;
 public:
-  Url(const std::string& url) {
+  explicit Url(const std::string& url) {
 
     std::regex re{ R"(^(?:http:/+)?([^/]+)(/.*)?$)" };
     std::smatch match;

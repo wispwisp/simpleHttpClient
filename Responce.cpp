@@ -14,12 +14,12 @@ namespace Tools {
       // whitespace after ':'
       size_t afterPos = headerEntry[pos + 1] == ' ' ? pos + 2 : pos + 1;
       headers[headerEntry.substr(0, pos)] = headerEntry.substr(afterPos);
-    }    
+    }
   }
 
   int makeStatus(const std::string& statusStr) {
-    //HTTP/1.1 200 OK
 
+    // find whitespaces around status 'HTTP/1.1 200 OK'
     size_t rb, re = 0;
     rb = statusStr.find(" ");
     if (rb == std::string::npos)
@@ -37,11 +37,10 @@ namespace Connection {
 
   Responce::Responce(const std::string& responce) {
 
-    size_t rangeBegin = 0;
-    size_t rangeEnd = 0;
+    static const std::string endingPattern = "\r\n";
 
     // status str:
-    rangeEnd = responce.find("\r\n");
+    size_t rangeEnd = responce.find(endingPattern);
     if (rangeEnd == std::string::npos)
       throw std::runtime_error("Bad responce:\n" + responce);
 
@@ -49,10 +48,10 @@ namespace Connection {
     m_statusCode = Tools::makeStatus(m_statusLine);
 
     // headers:
-    rangeBegin = rangeEnd + 2;
+    size_t rangeBegin = rangeEnd + 2;
     size_t len = 0;
     do {
-      rangeEnd = responce.find("\r\n", rangeBegin);
+      rangeEnd = responce.find(endingPattern, rangeBegin);
       if (rangeEnd == std::string::npos) {
 	break;
       }
