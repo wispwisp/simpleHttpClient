@@ -48,7 +48,7 @@ namespace Connection {
     m_statusCode = Tools::makeStatus(m_statusLine);
 
     // headers:
-    size_t rangeBegin = rangeEnd + 2;
+    size_t rangeBegin = rangeEnd + endingPattern.size();
     size_t len = 0;
     do {
       rangeEnd = responce.find(endingPattern, rangeBegin);
@@ -60,7 +60,7 @@ namespace Connection {
       if (len)
 	Tools::makeEntry(m_headers, responce, rangeBegin, len);
 
-      rangeBegin = rangeEnd + 2;
+      rangeBegin = rangeEnd + endingPattern.size();
     } while (len);
 
     // body:
