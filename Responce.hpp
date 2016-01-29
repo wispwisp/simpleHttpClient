@@ -1,27 +1,35 @@
 #ifndef RESPONCE_H
 #define RESPONCE_H
 
-#include <map>
 #include <string>
+#include <unordered_map>
 
 namespace Connection {
   
   class Responce {
     std::string m_statusLine;
-    int m_statusCode;
-    std::map<std::string, std::string> m_headers;
+    std::unordered_map<std::string, std::string> m_headers;
     std::string m_body;
   public:
-    explicit Responce(const std::string& responce);
+    explicit Responce(const char*);
+    explicit Responce(const std::string& responce)
+      : Responce(responce.c_str()) {};
 
-    int statusCode() const {return m_statusCode; }
-    const std::string& statusLine() const { return m_statusLine; }
-    const std::string& body() const { return m_body; }
+    int statusCode() const;
 
-    bool isHeader(const std::string& hdr) const { return m_headers.count(hdr); }
+    const std::string& statusLine() const noexcept
+    { return m_statusLine; }
+
+    const std::string& body() const noexcept
+    { return m_body; }
+
+    bool isHeader(const std::string& hdr) const noexcept
+    { return m_headers.count(hdr); }
+
     const std::string& header(const std::string&) const;
 
-    const std::map<std::string, std::string>& headers() const { return m_headers; }
+    const std::unordered_map<std::string, std::string>& headers() const noexcept
+    { return m_headers; }
   };
   
 }

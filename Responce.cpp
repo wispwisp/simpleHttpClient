@@ -1,19 +1,20 @@
 #include "Responce.hpp"
 
 #include <string>
+#include <cstring>
+#include <iterator>
+#include <algorithm>
 #include <stdexcept>
 
 namespace Tools {
-  void makeEntry(std::map<std::string, std::string>& headers,
-		 const std::string& responce, size_t rb, size_t len) {
+  void makeEntry(std::unordered_map<std::string, std::string>& headers,
+		 const char* begin, const char* end) {
 
-    std::string headerEntry = responce.substr(rb, len);
-
-    size_t pos = headerEntry.find(":");
-    if (pos != std::string::npos) {
-      // whitespace after ':'
-      size_t afterPos = headerEntry[pos + 1] == ' ' ? pos + 2 : pos + 1;
-      headers[headerEntry.substr(0, pos)] = headerEntry.substr(afterPos);
+    auto pos = std::find(begin, end, ':');
+    if (pos != end) {
+      auto wpos = isspace(*(pos + 1)) ? pos + 2 : pos + 1; // whitespace after ':'
+      headers[std::string(begin, std::distance(begin,pos))] =\
+	std::string(wpos, std::distance(wpos,end));
     }
   }
 
@@ -35,36 +36,42 @@ namespace Tools {
 
 namespace Connection {
 
-  Responce::Responce(const std::string& responce) {
+  Responce::Responce(const char* responceStr)
+    : m_statusLine(), m_headers(), m_body() {
 
     static const std::string endingPattern = "\r\n";
 
-    // status str:
-    size_t rangeEnd = responce.find(endingPattern);
-    if (rangeEnd == std::string::npos)
-      throw std::runtime_error("Bad responce:\n" + responce);
+    // iterator initialization
+    const char* first = responceStr;
+    const char* last = responceStr;
+    while(*last++);
 
-    m_statusLine = responce.substr(0, rangeEnd);
-    m_statusCode = Tools::makeStatus(m_statusLine);
+    // status str:
+    auto rangeEnd = std::search(first, last,
+				endingPattern.cbegin(), endingPattern.cend());
+    if (rangeEnd == last)
+      throw std::runtime_error("Broken responce");
+
+    m_statusLine = std::string(first, std::distance(first, rangeEnd));
 
     // headers:
-    size_t rangeBegin = rangeEnd + endingPattern.size();
+    auto rangeBegin = rangeEnd + endingPattern.size();
     size_t len = 0;
     do {
-      rangeEnd = responce.find(endingPattern, rangeBegin);
-      if (rangeEnd == std::string::npos) {
+      rangeEnd = std::search(rangeBegin, last,
+			     endingPattern.cbegin(), endingPattern.cend());
+
+      if (rangeEnd == last)
 	break;
-      }
-      
-      len = rangeEnd - rangeBegin;
-      if (len)
-	Tools::makeEntry(m_headers, responce, rangeBegin, len);
+
+      if ((len = std::distance(rangeBegin, rangeEnd)))
+	Tools::makeEntry(m_headers, rangeBegin, rangeEnd);
 
       rangeBegin = rangeEnd + endingPattern.size();
     } while (len);
 
     // body:
-    m_body = responce.substr(rangeBegin);
+    m_body = std::string(rangeBegin);
   }
 
   const std::string& Responce::header(const std::string& hdr) const {
@@ -75,4 +82,7 @@ namespace Connection {
     return header_it->second;
   }
 
+  int Responce::statusCode() const {
+    return Tools::makeStatus(m_statusLine);
+  }
 }

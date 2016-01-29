@@ -8,21 +8,28 @@
 class Url {
   std::string m_host;
   std::string m_res;
+  std::string m_port;
 public:
-  explicit Url(const std::string& url) {
+  explicit Url(const char* url)
+    : m_host(), m_res(), m_port() {
 
-    std::regex re{ R"(^(?:http:/+)?([^/]+)(/.*)?$)" };
-    std::smatch match;
+    static const std::regex re{ R"(^(?:http:/+)?([^/:]+)(?::(\d+))?(/.*)?$)" };
 
+    std::cmatch match;
     if (!std::regex_match(url, match, re)) {
       throw std::runtime_error("Invalid url");
     }
     
     m_host = match[1];
-    m_res = match[2].str().empty() ? "/" : match[2].str();
+    m_port = match[2].str().empty() ? "80" : match[2].str();
+    m_res = match[3].str().empty() ? "/" : match[3].str();
   }
-  const std::string& host() const { return m_host; }
-  const std::string& resource() const { return m_res; }
+  explicit Url(const std::string& url)
+    : Url(url.c_str()) {};
+
+  const std::string& host() const noexcept { return m_host; }
+  const std::string& resource() const noexcept { return m_res; }
+  const std::string& port() const noexcept { return m_port; }
 };
 
 #endif // MY_URL
